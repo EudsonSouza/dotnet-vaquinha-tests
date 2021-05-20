@@ -91,7 +91,43 @@ namespace Vaquinha.Unit.Tests.DomainTests
             endereco.ErrorMessages.Should().Contain("O campo Complemento deve possuir no máximo 250 caracteres", because: "o campo Complemento ultrapassou tamanho máximo permitido.");
             endereco.ErrorMessages.Should().Contain("O campo Número deve possuir no máximo 6 caracteres", because: "o campo Complemento ultrapassou tamanho máximo permitido.");
         }
-        
+
+        [Fact]
+        [Trait("Endereco", "Endereco_CepNaoPreenchidoEstadoInvalido_EnderecoInvalido")]
+        public void Endereco_CepNaoPreenchidoEstadoInvalido_EnderecoInvalido()
+        {
+            // Arrange
+            var endereco = _fixture.EnderecoCepVazioEstadoInvalido();
+
+            // Act
+            var valido = endereco.Valido();
+
+            // Assert
+            valido.Should().BeFalse(because: "deve possuir erros de validação");
+            endereco.ErrorMessages.Should().HaveCount(2, because: "o preenchimento de 2 campos não foi feito conforme o esperado.");
+
+            endereco.ErrorMessages.Should().Contain("O campo CEP deve ser preenchido", because: "o campo CEP é obrigatório e não foi preenchido.");
+            endereco.ErrorMessages.Should().Contain("Campo Estado inválido", because: "o campo Estado não foi preenchido comnforme o esperado.");
+        }
+
+        [Fact]
+        [Trait("Endereco", "Endereco_TelefoneNaoPreenchido_EnderecoInvalido")]
+        public void Endereco_TelefoneNaoPreenchidoo_EnderecoInvalido()
+        {
+            // Arrange
+            var endereco = _fixture.EnderecoTelefoneVazio();
+
+            // Act
+            var valido = endereco.Valido();
+
+            // Assert
+            valido.Should().BeFalse(because: "deve possuir erros de validação");
+            endereco.ErrorMessages.Should().HaveCount(1, because: "o preenchimento de 1 campo não foi feito conforme o esperado.");
+
+            endereco.ErrorMessages.Should().Contain("O campo Telefone deve ser preenchido", because: "o campo Telefone é obrigatório e não foi preenchido.");
+
+        }
+
 
     }
 }
